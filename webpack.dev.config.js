@@ -7,5 +7,16 @@ module.exports = {
   },
   devServer: {
     contentBase: './dist'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      }, {
+        test: /\.css$/i,
+        use: ['css-to-string-loader', 'css-loader']
+      }
+    ]
   }
 };

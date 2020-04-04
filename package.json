@@ -1,7 +1,7 @@
 {
-  "name": "road-dropdown",
-  "version": "1.0.8",
-  "description": "Dropdown with Web Components",
+  "name": "wc-fullcalendar",
+  "version": "0.0.1",
+  "description": "Web Component Wrapper over Fullcalendar",
   "main": "lib/bundle.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.dev.config.js --mode development",
@@ -10,11 +10,20 @@
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "keywords": [],
-  "author": "Robin Wieruch <opensource@rwieruch.com> (https://www.robinwieruch.de)",
+  "author": "Valentin Raduti <valentin@thedotin.ro> (https://deroude.ro); credits for bootstrap project to Robin Wieruch <opensource@rwieruch.com> (https://www.robinwieruch.de)",
   "license": "MIT",
+  "dependencies": {
+    "@fullcalendar/core": "4.4.0",
+    "@fullcalendar/interaction": "4.4.0",
+    "@fullcalendar/list": "4.4.0",
+    "@fullcalendar/daygrid": "4.4.0"
+  },
   "devDependencies": {
     "webpack": "^4.32.2",
     "webpack-cli": "^3.3.2",
-    "webpack-dev-server": "^3.5.1"
+    "webpack-dev-server": "^3.5.1",
+    "html-loader": "1.1.0",
+    "css-loader": "3.4.2",
+    "css-to-string-loader": "0.1.3"
   }
 }

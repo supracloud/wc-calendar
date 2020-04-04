@@ -1,26 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dropdown with Web Components</title>
+    <title>Full Calendar Web Component</title>
   </head>
   <body>
-    <road-dropdown
-      label="Dropdown"
-      option="option2"
+    <frmdb-calendar
       options='{ "option1": { "label": "Option 1" }, "option2": { "label": "Option 2" } }'
-    ></road-dropdown>
+    ></frmdb-calendar>
 
     <script src="./bundle.js"></script>
 
-    <script>
-      document.querySelector('road-dropdown').options = {
-        option1: { label: 'Option 1' },
-        option2: { label: 'Option 2' },
-      };
-
-      document
-        .querySelector('road-dropdown')
-        .addEventListener('onChange', value => console.log(value));
-    </script>
   </body>
 </html>

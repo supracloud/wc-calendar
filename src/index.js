@@ -1,157 +1,51 @@
-import globalStyle from './global-style.js';
-import basicAtom from './basic-atom.js';
-import * as COLORS from './colors.js';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
+import calendarStyle from '@fullcalendar/core/main.css';
+import calendarThemeStyle from '@fullcalendar/daygrid/main.min.css';
 
-import './button.js';
+/**
+ * Because https://bugs.chromium.org/p/chromium/issues/detail?id=336876
+ */
+const fcFont = document.createElement('style');
+fcFont.innerHTML = `@font-face {
+  font-family: "fcicons";
+  src: url("data:application/x-font-ttf;charset=utf-8;base64,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") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}`;
+document.head.appendChild(fcFont);
 
 const template = document.createElement('template');
+template.innerHTML = `<style>${calendarStyle}</style><style>${calendarThemeStyle}</style><div id = "calendar"></div>`;
 
-template.innerHTML = `
-  <style>
-    ${globalStyle}
+class FrmdbCalendar extends HTMLElement {
 
-    ${basicAtom}
-
-    .dropdown {
-      box-sizing: border-box;
-      padding: 3px 8px 8px;
-      cursor: pointer;
-    }
-
-    .dropdown.open .dropdown-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .label {
-      display: block;
-      margin-bottom: 5px;
-      color: ${COLORS.trblack.hex};
-      font-size: 16px;
-      font-weight: normal;
-      line-height: 16px;
-    }
-
-    button {
-      width: 100%;
-      position: relative;
-      padding-right: 45px;
-      padding-left: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      text-align: left;
-      white-space: nowrap;
-    }
-
-    .dropdown-list-container {
-      position: relative;
-    }
-
-    .dropdown-list {
-      position: absolute;
-      width: 100%;
-      display: none;
-      max-height: 192px;
-      overflow-y: auto;
-      margin: 4px 0 0;
-      padding: 0;
-      background-color: ${COLORS.trwhite.hex};
-      border: 1px solid ${COLORS.trgrey2.hex};
-      box-shadow: 0 2px 4px 0 rgba(${
-        COLORS.trblack.rgb
-      }, 0.05), 0 2px 8px 0 rgba(${COLORS.trgrey2.rgb}, 0.4);
-      list-style: none;
-    }
-
-    .dropdown-list li {
-      display: flex;
-      align-items: center;
-      margin: 4px 0;
-      padding: 0 7px;
-      border-right: none;
-      border-left: none;
-      border-width: 0;
-      font-size: 16px;
-      flex-shrink: 0;
-      height: 40px;
-    }
-
-    .dropdown-list li:not(.selected) {
-      box-shadow: none;
-    }
-
-    .dropdown-list li.selected {
-      font-weight: 600;
-      z-index: 100;
-    }
-
-    .dropdown-list li:active,
-    .dropdown-list li:hover,
-    .dropdown-list li.selected {
-      border-right: none;
-      border-left: none;
-      border-width: 1px;
-    }
-
-    .dropdown-list li:focus {
-      border-width: 2px;
-    }
-
-    .dropdown-list li:disabled {
-      color: rgba(${COLORS.trblack.rgb}, 0.6);
-      font-weight: 300;
-    }
-  </style>
-
-  <div class="dropdown">
-    <span class="label">Label</span>
-
-    <road-button as-atom>Content</road-button>
-
-    <div class="dropdown-list-container">
-      <ul class="dropdown-list"></ul>
-    </div>
-  </div>
-`;
-
-class Dropdown extends HTMLElement {
   constructor() {
     super();
-
     this._sR = this.attachShadow({ mode: 'open' });
     this._sR.appendChild(template.content.cloneNode(true));
 
     this.open = false;
 
-    this.$label = this._sR.querySelector('.label');
-    this.$button = this._sR.querySelector('road-button');
-    this.$dropdown = this._sR.querySelector('.dropdown');
-    this.$dropdownList = this._sR.querySelector('.dropdown-list');
+    this.calendarEl = this._sR.getElementById('calendar');
+    this.calendar = new Calendar(this.calendarEl, {
+      plugins: [dayGridPlugin, interactionPlugin, listPlugin],
+      header: {
+        left: 'prev,next',
+        center: 'title',
+        right: 'dayGridDay,dayGridWeek,dayGridMonth'
+      },
+      defaultView: 'dayGridWeek',
+      editable: true
+    });
 
-    this.$button.addEventListener(
-      'onClick',
-      this.toggleOpen.bind(this)
-    );
+    this.calendar.render();
   }
 
   static get observedAttributes() {
-    return ['label', 'option', 'options'];
-  }
-
-  get label() {
-    return this.getAttribute('label');
-  }
-
-  set label(value) {
-    this.setAttribute('label', value);
-  }
-
-  get option() {
-    return this.getAttribute('option');
-  }
-
-  set option(value) {
-    this.setAttribute('option', value);
+    return ['options'];
   }
 
   get options() {
@@ -162,60 +56,13 @@ class Dropdown extends HTMLElement {
     this.setAttribute('options', JSON.stringify(value));
   }
 
-  toggleOpen(event) {
-    this.open = !this.open;
-
-    this.open
-      ? this.$dropdown.classList.add('open')
-      : this.$dropdown.classList.remove('open');
-  }
-
-  static get observedAttributes() {
-    return ['label', 'option', 'options'];
-  }
-
   attributeChangedCallback(name, oldVal, newVal) {
     this.render();
   }
 
   render() {
-    this.$label.innerHTML = this.label;
 
-    if (this.options) {
-      this.$button.setAttribute(
-        'label',
-        this.options[this.option].label
-      );
-    }
-
-    this.$dropdownList.innerHTML = '';
-
-    Object.keys(this.options || {}).forEach(key => {
-      let option = this.options[key];
-      let $option = document.createElement('li');
-
-      $option.innerHTML = option.label;
-      $option.classList.add('basic-atom');
-
-      if (this.option && this.option === key) {
-        $option.classList.add('selected');
-      }
-
-      $option.addEventListener('click', () => {
-        this.option = key;
-
-        this.toggleOpen();
-
-        this.dispatchEvent(
-          new CustomEvent('onChange', { detail: key })
-        );
-
-        this.render();
-      });
-
-      this.$dropdownList.appendChild($option);
-    });
   }
 }
 
-window.customElements.define('road-dropdown', Dropdown);
+window.customElements.define('frmdb-calendar', FrmdbCalendar);

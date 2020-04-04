@@ -7,4 +7,16 @@ module.exports = {
     libraryTarget: 'umd',
   },
   devtool: 'source-map',
+  module: {
+    rules: [
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      },
+      {
+        test: /\.css$/i,
+        use: ['css-to-string-loader', 'css-loader']
+      }
+    ]
+  }
 };
