@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Full Calendar Web Component</title>
-  </head>
-  <body>
-    <frmdb-calendar
-      options='{ "option1": { "label": "Option 1" }, "option2": { "label": "Option 2" } }'
-    ></frmdb-calendar>
 
-    <script src="./bundle.js"></script>
+<head>
+  <title>Full Calendar Web Component</title>
+</head>
 
-  </body>
+<body>
+  <button id='add-event'>Add Event</button><button id='change-event'>Change Event</button>
+  <frmdb-calendar options='{}'>
+    <frmdb-calendar-event title='ev1' start='2020-04-05 12:00:00' end='2020-04-05 13:00:00'></frmdb-calendar-event>
+    <frmdb-calendar-event title='ev2' start='2020-04-05 20:00:00' end='2020-04-05 20:30:00'></frmdb-calendar-event>
+    <frmdb-calendar-event id='will-change' title='ev3' start='2020-04-06 13:00:00' allDay></frmdb-calendar-event>
+  </frmdb-calendar>
+
+  <script src="./bundle.js"></script>
+
+  <script>
+    document.querySelector('button#add-event').addEventListener('click', () => {
+      let ev = document.createElement('frmdb-calendar-event');
+      let startH = Math.floor(Math.random() * 12) + 6;
+      ev.setAttribute('start', `2020-04-07 ${startH}:00:00`);
+      ev.setAttribute('end', `2020-04-07 ${startH + 1}:00:00`);
+      ev.setAttribute('title', `New Event ${Math.floor(Math.random() * 5000)}`);
+      document.querySelector('frmdb-calendar').appendChild(ev);
+    });
+    document.querySelector('button#change-event').addEventListener('click', () => {
+      document.querySelector('frmdb-calendar-event#will-change').setAttribute('title', `changed to ${Math.floor(Math.random() * 5000)}`);
+    });
+    document.querySelector('frmdb-calendar').addEventListener('frmdbCalendarEventChanged', (event) => console.log('EVENT CHANGED', event));
+  </script>
+
+</body>
+
 </html>

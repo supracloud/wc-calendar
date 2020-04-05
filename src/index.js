@@ -1,9 +1,5 @@
-import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import calendarStyle from '@fullcalendar/core/main.css';
-import calendarThemeStyle from '@fullcalendar/daygrid/main.min.css';
+import { FrmdbCalendar } from './calendar';
+import { FrmdbCalendarEvent } from './event';
 
 /**
  * Because https://bugs.chromium.org/p/chromium/issues/detail?id=336876
@@ -17,52 +13,6 @@ fcFont.innerHTML = `@font-face {
 }`;
 document.head.appendChild(fcFont);
 
-const template = document.createElement('template');
-template.innerHTML = `<style>${calendarStyle}</style><style>${calendarThemeStyle}</style><div id = "calendar"></div>`;
-
-class FrmdbCalendar extends HTMLElement {
-
-  constructor() {
-    super();
-    this._sR = this.attachShadow({ mode: 'open' });
-    this._sR.appendChild(template.content.cloneNode(true));
-
-    this.open = false;
-
-    this.calendarEl = this._sR.getElementById('calendar');
-    this.calendar = new Calendar(this.calendarEl, {
-      plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-      header: {
-        left: 'prev,next',
-        center: 'title',
-        right: 'dayGridDay,dayGridWeek,dayGridMonth'
-      },
-      defaultView: 'dayGridWeek',
-      editable: true
-    });
-
-    this.calendar.render();
-  }
-
-  static get observedAttributes() {
-    return ['options'];
-  }
-
-  get options() {
-    return JSON.parse(this.getAttribute('options'));
-  }
-
-  set options(value) {
-    this.setAttribute('options', JSON.stringify(value));
-  }
-
-  attributeChangedCallback(name, oldVal, newVal) {
-    this.render();
-  }
-
-  render() {
-
-  }
-}
-
+window.customElements.define('frmdb-calendar-event', FrmdbCalendarEvent);
 window.customElements.define('frmdb-calendar', FrmdbCalendar);
+
